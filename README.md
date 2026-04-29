@@ -107,3 +107,23 @@ Credenciales de infraestructura local:
 ## Estado de la fase 1
 
 En esta fase solo se crea la base del monorepo y la infraestructura externa. Las capas de dominio, aplicación, persistencia, seguridad JWT y contratos de API se implementarán en etapas posteriores.
+
+## customer-service implementado en esta entrega
+
+### Endpoints principales
+
+- `POST /api/clientes`
+- `GET /api/clientes`
+- `GET /api/clientes/{id}`
+- `PUT /api/clientes/{id}`
+- `DELETE /api/clientes/{id}`
+- `POST /api/auth/login`
+
+### RabbitMQ
+
+- Exchange: `customer.exchange`
+- Routing key: `customer.created`
+
+### Seed inicial
+
+Al iniciar el servicio con Flyway se crean y cargan automáticamente 3 clientes iniciales del ejercicio técnico.

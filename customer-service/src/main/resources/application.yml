@@ -8,7 +8,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     open-in-view: false
     properties:
       hibernate:
@@ -21,6 +21,19 @@ spring:
     port: 5672
     username: guest
     password: guest
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+app:
+  jwt:
+    secret: transaction-customer-service-jwt-secret-key-2026-very-long-and-safe
+    expiration-minutes: 60
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
 
 server:
   port: 8081
