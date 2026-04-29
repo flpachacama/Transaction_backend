@@ -66,7 +66,7 @@ services:
     ports:
       - "5050:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@transaction.local
+      PGADMIN_DEFAULT_EMAIL: admin@transaction.example.com
       PGADMIN_DEFAULT_PASSWORD: admin123
       PGADMIN_CONFIG_SERVER_MODE: "True"
     volumes:
