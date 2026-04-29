@@ -51,7 +51,7 @@ public class MovementServiceImpl implements MovementService {
         } else if ("WITHDRAW".equalsIgnoreCase(requestDTO.getMovementType())) {
             if (account.getCurrentBalance().compareTo(amount) < 0) {
                 log.warn("Saldo insuficiente para retiro: accountNumber={}, amount={}", account.getAccountNumber(), amount);
-                throw new InsufficientBalanceException("Saldo no disponible");
+                throw new InsufficientBalanceException();
             }
             account.setCurrentBalance(account.getCurrentBalance().subtract(amount));
             movement.setAmount(amount.negate());

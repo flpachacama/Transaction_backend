@@ -19,24 +19,24 @@ import java.math.BigDecimal;
 public class AccountRequestDTO {
 
     @Schema(example = "joselema")
-    @NotBlank
+    @NotBlank(message = "no puede estar vacío")
     private String clientId;
 
     @Schema(example = "478758")
-    @NotBlank
+    @NotBlank(message = "no puede estar vacío")
     private String accountNumber;
 
     @Schema(example = "AHORRO", allowableValues = {"AHORRO", "CORRIENTE"})
-    @NotBlank
+    @NotBlank(message = "no puede estar vacío")
     @Pattern(regexp = "^(AHORRO|CORRIENTE)$", message = "accountType debe ser AHORRO o CORRIENTE")
     private String accountType;
 
     @Schema(example = "2000.00")
-    @NotNull
-    @Positive
+    @NotNull(message = "no puede ser nulo")
+    @Positive(message = "debe ser mayor que cero")
     private BigDecimal initialBalance;
 
     @Schema(example = "true")
-    @NotNull
+    @NotNull(message = "no puede ser nulo")
     private Boolean status;
 }

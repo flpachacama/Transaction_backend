@@ -19,16 +19,16 @@ import java.math.BigDecimal;
 public class MovementRequestDTO {
 
     @Schema(example = "478758")
-    @NotBlank
+    @NotBlank(message = "no puede estar vacío")
     private String accountNumber;
 
     @Schema(example = "DEPOSIT", allowableValues = {"DEPOSIT", "WITHDRAW"})
-    @NotBlank
+    @NotBlank(message = "no puede estar vacío")
     @Pattern(regexp = "^(DEPOSIT|WITHDRAW)$", message = "movementType debe ser DEPOSIT o WITHDRAW")
     private String movementType;
 
     @Schema(example = "150.00")
-    @NotNull
-    @Positive
+    @NotNull(message = "no puede ser nulo")
+    @Positive(message = "debe ser mayor que cero")
     private BigDecimal amount;
 }

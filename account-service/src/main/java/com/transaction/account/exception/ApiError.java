@@ -1,7 +1,6 @@
 package com.transaction.account.exception;
 
 import java.time.Instant;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +14,4 @@ public class ApiError {
     private String error;
     private String message;
     private String path;
-    private List<String> details;
 }
