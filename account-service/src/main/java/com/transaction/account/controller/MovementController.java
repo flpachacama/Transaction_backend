@@ -5,6 +5,7 @@ import com.transaction.account.dto.MovementResponseDTO;
 import com.transaction.account.service.MovementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -31,18 +32,24 @@ public class MovementController {
 
     @PostMapping
     @Operation(summary = "Crear movimiento")
+    @ApiResponse(responseCode = "201", description = "Movimiento creado")
+    @ApiResponse(responseCode = "400", description = "Error de validación o negocio")
+    @ApiResponse(responseCode = "404", description = "Cuenta no encontrada")
     public ResponseEntity<MovementResponseDTO> createMovement(@Valid @RequestBody MovementRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(movementService.createMovement(dto));
     }
 
     @GetMapping
     @Operation(summary = "Listar movimientos")
+    @ApiResponse(responseCode = "200", description = "Listado obtenido")
     public ResponseEntity<List<MovementResponseDTO>> getAllMovements() {
         return ResponseEntity.ok(movementService.getAllMovements());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Obtener movimiento por id")
+    @ApiResponse(responseCode = "200", description = "Movimiento encontrado")
+    @ApiResponse(responseCode = "404", description = "Movimiento no encontrado")
     public ResponseEntity<MovementResponseDTO> getMovementById(
             @Parameter(description = "Id de movimiento", required = true) @PathVariable Long id) {
         return ResponseEntity.ok(movementService.getMovementById(id));
@@ -50,6 +57,8 @@ public class MovementController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar movimiento")
+    @ApiResponse(responseCode = "204", description = "Movimiento eliminado")
+    @ApiResponse(responseCode = "404", description = "Movimiento no encontrado")
     public ResponseEntity<Void> deleteMovement(
             @Parameter(description = "Id de movimiento", required = true) @PathVariable Long id) {
         movementService.deleteMovement(id);

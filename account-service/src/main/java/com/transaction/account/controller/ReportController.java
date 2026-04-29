@@ -4,6 +4,7 @@ import com.transaction.account.dto.AccountStatementDTO;
 import com.transaction.account.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -28,6 +29,9 @@ public class ReportController {
 
     @GetMapping
     @Operation(summary = "Generar estado de cuenta por cliente y rango de fechas")
+    @ApiResponse(responseCode = "200", description = "Reporte generado")
+    @ApiResponse(responseCode = "400", description = "Parámetros inválidos")
+    @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
     public ResponseEntity<List<AccountStatementDTO>> generateStatement(
             @Parameter(description = "Fecha/hora inicio (ISO-8601)", example = "2026-04-01T00:00:00", required = true)
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
