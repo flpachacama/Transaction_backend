@@ -7,14 +7,17 @@ import com.transaction.account.entity.Account;
 import com.transaction.account.entity.Movement;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
 
     AccountResponseDTO toResponseDTO(Account account);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "currentBalance", ignore = true)
+    @Mapping(target = "movements", ignore = true)
     Account toEntity(AccountRequestDTO requestDTO);
 
+    @Mapping(source = "account.id", target = "accountId")
     MovementResponseDTO toMovementResponseDTO(Movement movement);
 }
