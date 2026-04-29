@@ -5,7 +5,10 @@ CREATE TABLE persons (
     age INTEGER NOT NULL,
     identification VARCHAR(30) NOT NULL UNIQUE,
     address VARCHAR(255) NOT NULL,
-    phone VARCHAR(30) NOT NULL
+    phone VARCHAR(30) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_persons_gender CHECK (gender IN ('MALE', 'FEMALE'))
 );
 
 CREATE TABLE customers (
@@ -13,8 +16,11 @@ CREATE TABLE customers (
     client_id VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     status BOOLEAN NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_customers_persons FOREIGN KEY (id) REFERENCES persons (id) ON DELETE CASCADE
 );
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 WITH inserted_person AS (
     INSERT INTO persons (name, gender, age, identification, address, phone)
@@ -22,7 +28,7 @@ WITH inserted_person AS (
     RETURNING id
 )
 INSERT INTO customers (id, client_id, password, status)
-SELECT id, 'joselema', '{noop}1234', TRUE FROM inserted_person;
+SELECT id, 'joselema', crypt('1234', gen_salt('bf', 10)), TRUE FROM inserted_person;
 
 WITH inserted_person AS (
     INSERT INTO persons (name, gender, age, identification, address, phone)
@@ -30,7 +36,7 @@ WITH inserted_person AS (
     RETURNING id
 )
 INSERT INTO customers (id, client_id, password, status)
-SELECT id, 'mari', '{noop}5678', TRUE FROM inserted_person;
+SELECT id, 'marianela', crypt('5678', gen_salt('bf', 10)), TRUE FROM inserted_person;
 
 WITH inserted_person AS (
     INSERT INTO persons (name, gender, age, identification, address, phone)
@@ -38,4 +44,4 @@ WITH inserted_person AS (
     RETURNING id
 )
 INSERT INTO customers (id, client_id, password, status)
-SELECT id, 'juanito', '{noop}1245', TRUE FROM inserted_person;
+SELECT id, 'juanosorio', crypt('1245', gen_salt('bf', 10)), TRUE FROM inserted_person;
