@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -76,6 +77,13 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cuenta no encontrada con id: " + id));
         accountRepository.delete(account);
         log.info("Cuenta eliminada: id={}, accountNumber={}", account.getId(), account.getAccountNumber());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<AccountResponseDTO> getByAccountNumber(String accountNumber) {
+        return accountRepository.findByAccountNumber(accountNumber)
+                .map(accountMapper::toResponseDTO);
     }
 
     private CustomerReference resolveCustomerReference(AccountRequestDTO requestDTO) {
