@@ -36,6 +36,9 @@ public class MovementServiceImpl implements MovementService {
                 .orElseThrow(() -> new ResourceNotFoundException("Cuenta no encontrada con accountNumber: " + requestDTO.getAccountNumber()));
 
         BigDecimal amount = requestDTO.getAmount();
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BusinessException("El monto debe ser mayor que cero");
+        }
         LocalDateTime now = LocalDateTime.now();
         Movement movement = new Movement();
         movement.setMovementDate(now);
@@ -44,6 +47,7 @@ public class MovementServiceImpl implements MovementService {
 
         if ("DEPOSIT".equalsIgnoreCase(requestDTO.getMovementType())) {
             account.setCurrentBalance(account.getCurrentBalance().add(amount));
+            log.info("Depósito aplicado: accountNumber={}, amount={}", account.getAccountNumber(), amount);
         } else if ("WITHDRAW".equalsIgnoreCase(requestDTO.getMovementType())) {
             if (account.getCurrentBalance().compareTo(amount) < 0) {
                 log.warn("Saldo insuficiente para retiro: accountNumber={}, amount={}", account.getAccountNumber(), amount);
@@ -51,6 +55,7 @@ public class MovementServiceImpl implements MovementService {
             }
             account.setCurrentBalance(account.getCurrentBalance().subtract(amount));
             movement.setAmount(amount.negate());
+            log.info("Retiro aplicado: accountNumber={}, amount={}", account.getAccountNumber(), amount);
         } else {
             throw new BusinessException("Tipo de movimiento inválido");
         }

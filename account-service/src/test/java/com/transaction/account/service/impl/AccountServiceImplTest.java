@@ -46,7 +46,6 @@ class AccountServiceImplTest {
                 .initialBalance(BigDecimal.valueOf(2000.00))
                 .status(true)
                 .clientId("joselema")
-                .clientName("Jose Lema")
                 .build();
 
         Account account = new Account();
@@ -74,7 +73,6 @@ class AccountServiceImplTest {
                 .currentBalance(BigDecimal.valueOf(2000.00))
                 .status(true)
                 .clientId("joselema")
-                .clientName("Jose Lema")
                 .build();
 
         when(accountRepository.existsByAccountNumber("478758")).thenReturn(false);
@@ -104,7 +102,6 @@ class AccountServiceImplTest {
                 .initialBalance(BigDecimal.valueOf(2000.00))
                 .status(true)
                 .clientId("joselema")
-                .clientName("Jose Lema")
                 .build();
 
         when(accountRepository.existsByAccountNumber("478758")).thenReturn(true);

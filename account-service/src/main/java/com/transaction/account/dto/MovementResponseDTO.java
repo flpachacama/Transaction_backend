@@ -1,5 +1,6 @@
 package com.transaction.account.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,10 +14,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovementResponseDTO {
+    @Schema(example = "10")
     private Long id;
-    private LocalDateTime date;
+
+    @Schema(example = "478758")
+    private String accountNumber;
+
+    @Schema(example = "WITHDRAW")
     private String movementType;
+
+    @Schema(example = "-575.00")
     private BigDecimal amount;
+
+    @Schema(example = "1425.00")
     private BigDecimal balance;
-    private Long accountId;
+
+    @Schema(example = "2026-04-29T17:15:00")
+    private LocalDateTime movementDate;
 }

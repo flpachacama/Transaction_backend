@@ -12,7 +12,6 @@ import org.mapstruct.Mapping;
 public interface AccountMapper {
 
     @Mapping(source = "customerReference.clientId", target = "clientId")
-    @Mapping(source = "customerReference.clientName", target = "clientName")
     AccountResponseDTO toResponseDTO(Account account);
 
     @Mapping(target = "id", ignore = true)
@@ -22,7 +21,6 @@ public interface AccountMapper {
     @Mapping(target = "movements", ignore = true)
     Account toEntity(AccountRequestDTO requestDTO);
 
-    @Mapping(source = "movementDate", target = "date")
-    @Mapping(source = "account.id", target = "accountId")
+    @Mapping(source = "account.accountNumber", target = "accountNumber")
     MovementResponseDTO toMovementResponseDTO(Movement movement);
 }

@@ -1,24 +1,40 @@
 package com.transaction.account.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountStatementDTO {
-    private LocalDate date;
-    private String client;
+    @Schema(example = "2026-04-29T17:15:00")
+    private LocalDateTime date;
+
+    @Schema(example = "Jose Lema")
+    private String clientName;
+
+    @Schema(example = "478758")
     private String accountNumber;
-    private String type;
+
+    @Schema(example = "AHORRO")
+    private String accountType;
+
+    @Schema(example = "2000.00")
     private BigDecimal initialBalance;
+
+    @Schema(example = "true")
     private Boolean status;
+
+    @Schema(example = "-575.00")
     private BigDecimal movement;
-    private BigDecimal availableBalance;
+
+    @Schema(example = "1425.00")
+    private BigDecimal balance;
 }

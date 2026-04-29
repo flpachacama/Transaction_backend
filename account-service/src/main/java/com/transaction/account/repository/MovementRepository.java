@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface MovementRepository extends JpaRepository<Movement, Long> {
     List<Movement> findByAccountId(Long accountId);
     List<Movement> findByMovementDateBetween(LocalDateTime start, LocalDateTime end);
+    List<Movement> findByAccountIdAndMovementDateBetween(Long accountId, LocalDateTime start, LocalDateTime end);
 }
