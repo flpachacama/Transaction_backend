@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.transaction.account.dto.MovementRequestDTO;
 import com.transaction.account.entity.Account;
+import com.transaction.account.entity.CustomerReference;
 import com.transaction.account.entity.Movement;
 import com.transaction.account.exception.InsufficientBalanceException;
 import com.transaction.account.mapper.AccountMapper;
@@ -45,6 +46,7 @@ class MovementServiceImplTest {
         account.setAccountNumber("478758");
         account.setCurrentBalance(BigDecimal.valueOf(100.00));
         account.setStatus(true);
+        account.setCustomerReference(new CustomerReference());
 
         MovementRequestDTO request = MovementRequestDTO.builder()
                 .accountNumber("478758")
@@ -70,6 +72,7 @@ class MovementServiceImplTest {
         account.setAccountNumber("478758");
         account.setCurrentBalance(BigDecimal.valueOf(1000.00));
         account.setStatus(true);
+        account.setCustomerReference(new CustomerReference());
 
         MovementRequestDTO request = MovementRequestDTO.builder()
                 .accountNumber("478758")
@@ -79,7 +82,7 @@ class MovementServiceImplTest {
 
         Movement movement = new Movement();
         movement.setId(1L);
-        movement.setDate(LocalDateTime.now());
+        movement.setMovementDate(LocalDateTime.now());
         movement.setMovementType("WITHDRAW");
         movement.setAmount(BigDecimal.valueOf(-575.00));
         movement.setBalance(BigDecimal.valueOf(425.00));

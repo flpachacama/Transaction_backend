@@ -3,17 +3,18 @@ package com.transaction.account.service.impl;
 import com.transaction.account.dto.AccountRequestDTO;
 import com.transaction.account.dto.AccountResponseDTO;
 import com.transaction.account.entity.Account;
+import com.transaction.account.entity.CustomerReference;
 import com.transaction.account.exception.BusinessException;
 import com.transaction.account.exception.ResourceNotFoundException;
 import com.transaction.account.mapper.AccountMapper;
 import com.transaction.account.repository.AccountRepository;
+import com.transaction.account.repository.CustomerReferenceRepository;
 import com.transaction.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -23,6 +24,7 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
+    private final CustomerReferenceRepository customerReferenceRepository;
     private final AccountMapper accountMapper;
 
     @Override
@@ -32,10 +34,14 @@ public class AccountServiceImpl implements AccountService {
         }
 
         Account account = accountMapper.toEntity(requestDTO);
+        account.setCustomerReference(resolveCustomerReference(requestDTO));
         account.setCurrentBalance(requestDTO.getInitialBalance());
 
         Account saved = accountRepository.save(account);
-        log.info("Cuenta creada: accountNumber={}, clientId={}", saved.getAccountNumber(), saved.getClientId());
+        log.info(
+                "Cuenta creada: accountNumber={}, clientId={}",
+                saved.getAccountNumber(),
+                saved.getCustomerReference().getClientId());
         return accountMapper.toResponseDTO(saved);
     }
 
@@ -57,8 +63,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cuenta no encontrada con id: " + id));
         account.setAccountType(requestDTO.getAccountType());
         account.setStatus(requestDTO.getStatus());
-        account.setClientId(requestDTO.getClientId());
-        account.setClientName(requestDTO.getClientName());
+        account.setCustomerReference(resolveCustomerReference(requestDTO));
         account.setInitialBalance(requestDTO.getInitialBalance());
         if (account.getCurrentBalance() == null) account.setCurrentBalance(requestDTO.getInitialBalance());
         Account updated = accountRepository.save(account);
@@ -71,5 +76,22 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cuenta no encontrada con id: " + id));
         accountRepository.delete(account);
         log.info("Cuenta eliminada: id={}, accountNumber={}", account.getId(), account.getAccountNumber());
+    }
+
+    private CustomerReference resolveCustomerReference(AccountRequestDTO requestDTO) {
+        return customerReferenceRepository
+                .findByClientId(requestDTO.getClientId())
+                .map(existing -> {
+                    existing.setClientName(requestDTO.getClientName());
+                    existing.setStatus(requestDTO.getStatus());
+                    return existing;
+                })
+                .orElseGet(() -> {
+                    CustomerReference customerReference = new CustomerReference();
+                    customerReference.setClientId(requestDTO.getClientId());
+                    customerReference.setClientName(requestDTO.getClientName());
+                    customerReference.setStatus(requestDTO.getStatus());
+                    return customerReferenceRepository.save(customerReference);
+                });
     }
 }

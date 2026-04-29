@@ -38,7 +38,7 @@ public class MovementServiceImpl implements MovementService {
         BigDecimal amount = requestDTO.getAmount();
         LocalDateTime now = LocalDateTime.now();
         Movement movement = new Movement();
-        movement.setDate(now);
+        movement.setMovementDate(now);
         movement.setMovementType(requestDTO.getMovementType());
         movement.setAmount(amount);
 

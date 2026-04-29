@@ -9,11 +9,13 @@ import static org.mockito.Mockito.when;
 import com.transaction.account.dto.AccountRequestDTO;
 import com.transaction.account.dto.AccountResponseDTO;
 import com.transaction.account.entity.Account;
+import com.transaction.account.entity.CustomerReference;
 import com.transaction.account.exception.BusinessException;
 import com.transaction.account.mapper.AccountMapper;
 import com.transaction.account.repository.AccountRepository;
-import com.transaction.account.service.AccountService;
+import com.transaction.account.repository.CustomerReferenceRepository;
 import java.math.BigDecimal;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,6 +30,9 @@ class AccountServiceImplTest {
 
     @Mock
     private AccountMapper accountMapper;
+
+    @Mock
+    private CustomerReferenceRepository customerReferenceRepository;
 
     @InjectMocks
     private AccountServiceImpl accountService;
@@ -50,8 +55,7 @@ class AccountServiceImplTest {
         account.setInitialBalance(BigDecimal.valueOf(2000.00));
         account.setCurrentBalance(BigDecimal.valueOf(2000.00));
         account.setStatus(true);
-        account.setClientId("joselema");
-        account.setClientName("Jose Lema");
+        account.setCustomerReference(new CustomerReference(1L, "joselema", "Jose Lema", true, null, null));
 
         Account savedAccount = new Account();
         savedAccount.setId(1L);
@@ -60,8 +64,7 @@ class AccountServiceImplTest {
         savedAccount.setInitialBalance(BigDecimal.valueOf(2000.00));
         savedAccount.setCurrentBalance(BigDecimal.valueOf(2000.00));
         savedAccount.setStatus(true);
-        savedAccount.setClientId("joselema");
-        savedAccount.setClientName("Jose Lema");
+        savedAccount.setCustomerReference(new CustomerReference(1L, "joselema", "Jose Lema", true, null, null));
 
         AccountResponseDTO responseDTO = AccountResponseDTO.builder()
                 .id(1L)
@@ -75,6 +78,8 @@ class AccountServiceImplTest {
                 .build();
 
         when(accountRepository.existsByAccountNumber("478758")).thenReturn(false);
+        when(customerReferenceRepository.findByClientId("joselema"))
+                .thenReturn(Optional.of(new CustomerReference(1L, "joselema", "Jose Lema", true, null, null)));
         when(accountMapper.toEntity(request)).thenReturn(account);
         when(accountRepository.save(any(Account.class))).thenReturn(savedAccount);
         when(accountMapper.toResponseDTO(savedAccount)).thenReturn(responseDTO);
