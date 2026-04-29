@@ -1,0 +1,44 @@
+# Build outputs
+/target/
+**/target/
+**/out/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# Maven
+!.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+*.db
+*.log
+*.bak
+*.orig
+*.tmp
+out/
+
+# VS Code
+.vscode/
+
+# Eclipse / STS
+.classpath
+.project
+.settings/
+.factorypath
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local environment files
+.env
+.env.*
