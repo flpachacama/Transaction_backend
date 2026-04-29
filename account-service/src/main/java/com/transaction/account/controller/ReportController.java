@@ -34,11 +34,11 @@ public class ReportController {
     @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
     public ResponseEntity<List<AccountStatementDTO>> generateStatement(
             @Parameter(description = "Fecha/hora inicio (ISO-8601)", example = "2026-04-01T00:00:00", required = true)
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @Parameter(description = "Fecha/hora fin (ISO-8601)", example = "2026-04-30T23:59:59", required = true)
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
             @Parameter(description = "Identificador de cliente", example = "joselema", required = true)
-            @RequestParam @NotBlank String clientId) {
+            @RequestParam("clientId") @NotBlank String clientId) {
         return ResponseEntity.ok(reportService.generateStatement(startDate, endDate, clientId));
     }
 }
