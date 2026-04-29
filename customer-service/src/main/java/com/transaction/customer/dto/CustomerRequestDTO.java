@@ -21,7 +21,7 @@ public class CustomerRequestDTO {
     private String gender;
 
     @NotNull
-    @Min(0)
+    @Min(1)
     private Integer age;
 
     @NotBlank

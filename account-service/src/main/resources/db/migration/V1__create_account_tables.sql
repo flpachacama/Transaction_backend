@@ -1,21 +1,45 @@
-INSERT INTO customer_reference (client_id, client_name, status)
-VALUES
-    ('joselema', 'Jose Lema', true),
-    ('marianela', 'Marianela Montalvo', true),
-    ('juanosorio', 'Juan Osorio', true);
+CREATE TABLE customer_reference (
+    id BIGSERIAL PRIMARY KEY,
+    client_id VARCHAR(50) NOT NULL UNIQUE,
+    client_name VARCHAR(120) NOT NULL,
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-INSERT INTO accounts
-(customer_ref_id, account_number, account_type, initial_balance, current_balance, status)
-VALUES
-    (1, '478758', 'AHORRO', 2000.00, 1425.00, true),
-    (2, '225487', 'CORRIENTE', 100.00, 700.00, true),
-    (3, '495878', 'AHORRO', 0.00, 150.00, true),
-    (2, '496825', 'AHORRO', 540.00, 0.00, true);
+CREATE TABLE accounts
+(
+    id              BIGSERIAL PRIMARY KEY,
+    customer_ref_id BIGINT         NOT NULL,
+    account_number  VARCHAR(20)    NOT NULL UNIQUE,
+    account_type    VARCHAR(20)    NOT NULL
+        CHECK (account_type IN ('AHORRO', 'CORRIENTE')),
+    initial_balance NUMERIC(12, 2) NOT NULL,
+    current_balance NUMERIC(12, 2) NOT NULL,
+    status          BOOLEAN        NOT NULL DEFAULT TRUE,
+    created_at      TIMESTAMP               DEFAULT CURRENT_TIMESTAMP,
 
-INSERT INTO movements
-(account_id, movement_type, amount, balance)
-VALUES
-    (1, 'WITHDRAW', 575.00, 1425.00),
-    (2, 'DEPOSIT', 600.00, 700.00),
-    (3, 'DEPOSIT', 150.00, 150.00),
-    (4, 'WITHDRAW', 540.00, 0.00);
+    CONSTRAINT fk_accounts_customer
+        FOREIGN KEY (customer_ref_id)
+            REFERENCES customer_reference (id)
+);
+
+CREATE TABLE movements
+(
+    id            BIGSERIAL PRIMARY KEY,
+    account_id    BIGINT         NOT NULL,
+    movement_date TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    movement_type VARCHAR(20)    NOT NULL
+        CHECK (movement_type IN ('DEPOSIT', 'WITHDRAW')),
+    amount        NUMERIC(12, 2) NOT NULL,
+    balance       NUMERIC(12, 2) NOT NULL,
+    created_at    TIMESTAMP               DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_movements_account
+        FOREIGN KEY (account_id)
+            REFERENCES accounts (id)
+            ON DELETE CASCADE
+);
+
+CREATE INDEX idx_accounts_number ON accounts (account_number);
+CREATE INDEX idx_movements_account ON movements (account_id);
+CREATE INDEX idx_customer_reference_client ON customer_reference (client_id);
