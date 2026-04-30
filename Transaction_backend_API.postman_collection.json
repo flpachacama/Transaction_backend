@@ -1,0 +1,658 @@
+{
+  "info": {
+    "_postman_id": "050a2642-145d-495d-85a2-65ca82e6f9b4",
+    "name": "Transaction_backend_API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40530640"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200 or 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "const response = pm.response.json();",
+                  "pm.collectionVariables.set(\"token\", response.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"joselema\",\n  \"password\": \"1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_customer}}/api/auth/login",
+              "host": [
+                "{{base_customer}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Customer",
+      "item": [
+        {
+          "name": "Create Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200 or 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "inherit"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"gender\": \"MALE\",\n  \"age\": 30,\n  \"identification\": \"1710000000\",\n  \"address\": \"Quito\",\n  \"phone\": \"099999999\",\n  \"clientId\": \"testuser\",\n  \"password\": \"1234\",\n  \"status\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_customer}}/api/clientes",
+              "host": [
+                "{{base_customer}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "url": {
+              "raw": "{{base_customer}}/api/clientes",
+              "host": [
+                "{{base_customer}}"
+              ],
+              "path": [
+                "api",
+                "clientes"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{base_url_customer}}/api/clientes' --header 'Authorization: Bearer {{token}}' --header 'Accept: application/json'"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "url": {
+              "raw": "{{base_customer}}/api/clientes/1",
+              "host": [
+                "{{base_customer}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "1"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{base_url_customer}}/api/clientes/1' --header 'Authorization: Bearer {{token}}' --header 'Accept: application/json'"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"User\",\n  \"gender\": \"MALE\",\n  \"age\": 30,\n  \"identification\": \"1710000089\",\n  \"address\": \"Quito\",\n  \"phone\": \"099999999\",\n  \"clientId\": \"user1\",\n  \"password\": \"1234\",\n  \"status\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_customer}}/api/clientes/1",
+              "host": [
+                "{{base_customer}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "1"
+              ]
+            },
+            "description": "Generated from cURL: curl --request PUT --url '{{base_url_customer}}/api/clientes/1' --header 'Authorization: Bearer {{token}}' --header 'Content-Type: application/json' --header 'Accept: application/json' --data-raw '{\n  \"nombre\": \"Jose\",\n  \"genero\": \"M\",\n  \"edad\": 30,\n  \"identificacion\": \"0102030405\",\n  \"direccion\": \"Quito\",\n  \"telefono\": \"0999999999\",\n  \"contrasena\": \"1234\",\n  \"estado\": true\n}'"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Customer",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "url": {
+              "raw": "{{base_customer}}/api/clientes/1",
+              "host": [
+                "{{base_customer}}"
+              ],
+              "path": [
+                "api",
+                "clientes",
+                "1"
+              ]
+            },
+            "description": "Generated from cURL: curl --request DELETE --url '{{base_url_customer}}/api/clientes/1' --header 'Authorization: Bearer {{token}}' --header 'Accept: application/json'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Account",
+      "item": [
+        {
+          "name": "Create Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200 or 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "inherit"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clientId\": \"joselema\",\n  \"accountNumber\": \"585546\",\n  \"accountType\": \"CORRIENTE\",\n  \"initialBalance\": 1000,\n  \"status\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_account}}/api/cuentas",
+              "host": [
+                "{{base_account}}"
+              ],
+              "path": [
+                "api",
+                "cuentas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Accounts",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200 or 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "inherit"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_account}}/api/cuentas",
+              "host": [
+                "{{base_account}}"
+              ],
+              "path": [
+                "api",
+                "cuentas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Account By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "url": {
+              "raw": "{{base_account}}/api/cuentas/1",
+              "host": [
+                "{{base_account}}"
+              ],
+              "path": [
+                "api",
+                "cuentas",
+                "1"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{base_url_account}}/api/cuentas/1' --header 'Authorization: Bearer {{token}}' --header 'Accept: application/json'"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Account",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"clientId\": \"joselema\",\n    \"accountNumber\": \"585547\",\n    \"accountType\": \"CORRIENTE\",\n    \"initialBalance\": 1000,\n    \"status\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_account}}/api/cuentas/1",
+              "host": [
+                "{{base_account}}"
+              ],
+              "path": [
+                "api",
+                "cuentas",
+                "1"
+              ]
+            },
+            "description": "Generated from cURL: curl --request PUT --url '{{base_url_account}}/api/cuentas/1' --header 'Authorization: Bearer {{token}}' --header 'Content-Type: application/json' --header 'Accept: application/json' --data-raw '{\n  \"numeroCuenta\": \"478758\",\n  \"tipoCuenta\": \"AHORRO\",\n  \"saldoInicial\": 1000,\n  \"estado\": true,\n  \"clienteId\": \"joselema\"\n}'"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Account",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "url": {
+              "raw": "{{base_account}}/api/cuentas/1",
+              "host": [
+                "{{base_account}}"
+              ],
+              "path": [
+                "api",
+                "cuentas",
+                "1"
+              ]
+            },
+            "description": "Generated from cURL: curl --request DELETE --url '{{base_url_account}}/api/cuentas/1' --header 'Authorization: Bearer {{token}}' --header 'Accept: application/json'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Movement",
+      "item": [
+        {
+          "name": "Create Movement",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200 or 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "inherit"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accountNumber\": \"225487\",\n  \"movementType\": \"DEPOSIT\",\n  \"amount\": 100\n}"
+            },
+            "url": {
+              "raw": "{{base_account}}/api/movimientos",
+              "host": [
+                "{{base_account}}"
+              ],
+              "path": [
+                "api",
+                "movimientos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Movements",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "url": {
+              "raw": "{{base_account}}/api/movimientos",
+              "host": [
+                "{{base_account}}"
+              ],
+              "path": [
+                "api",
+                "movimientos"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{base_url_account}}/api/movimientos' --header 'Authorization: Bearer {{token}}' --header 'Accept: application/json'"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Movement By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "url": {
+              "raw": "{{base_account}}/api/movimientos/2",
+              "host": [
+                "{{base_account}}"
+              ],
+              "path": [
+                "api",
+                "movimientos",
+                "2"
+              ]
+            },
+            "description": "Generated from cURL: curl --request GET --url '{{base_url_account}}/api/movimientos/1' --header 'Authorization: Bearer {{token}}' --header 'Accept: application/json'"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Movement",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "disabled": false
+              },
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "url": {
+              "raw": "{{base_account}}/api/movimientos/2",
+              "host": [
+                "{{base_account}}"
+              ],
+              "path": [
+                "api",
+                "movimientos",
+                "2"
+              ]
+            },
+            "description": "Generated from cURL: curl --request DELETE --url '{{base_url_account}}/api/movimientos/1' --header 'Authorization: Bearer {{token}}' --header 'Accept: application/json'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Report",
+      "item": [
+        {
+          "name": "Get Report",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200 or 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "inherit"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_account}}/api/reportes?startDate=2026-04-01T00:00:00&endDate=2026-04-30T23:59:59&clientId=joselema",
+              "host": [
+                "{{base_account}}"
+              ],
+              "path": [
+                "api",
+                "reportes"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-04-01T00:00:00"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-04-30T23:59:59"
+                },
+                {
+                  "key": "clientId",
+                  "value": "joselema"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_customer",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "base_account",
+      "value": "http://localhost:8082"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}

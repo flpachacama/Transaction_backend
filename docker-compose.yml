@@ -1,0 +1,115 @@
+version: "3.9"
+
+services:
+
+  customer-db:
+    image: postgres:16-alpine
+    container_name: transaction-customer-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: customer_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - customer_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d customer_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  account-db:
+    image: postgres:16-alpine
+    container_name: transaction-account-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: account_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - account_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d account_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: transaction-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  customer-service:
+    build: ./customer-service
+    container_name: transaction-customer-service
+    restart: unless-stopped
+    depends_on:
+      customer-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://customer-db:5432/customer_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
+  account-service:
+    build: ./account-service
+    container_name: transaction-account-service
+    restart: unless-stopped
+    depends_on:
+      account-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://account-db:5432/account_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
+  pgadmin:
+    image: dpage/pgadmin4:8.12
+    container_name: transaction-pgadmin
+    restart: unless-stopped
+    depends_on:
+      - customer-db
+      - account-db
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@transaction.example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  customer_db_data:
+  account_db_data:
+  rabbitmq_data:
+  pgadmin_data:
