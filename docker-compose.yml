@@ -1,4 +1,7 @@
+version: "3.9"
+
 services:
+
   customer-db:
     image: postgres:16-alpine
     container_name: transaction-customer-db
@@ -16,7 +19,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 20s
 
   account-db:
     image: postgres:16-alpine
@@ -35,7 +37,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 20s
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -49,12 +50,48 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+
+  customer-service:
+    build: ./customer-service
+    container_name: transaction-customer-service
+    restart: unless-stopped
+    depends_on:
+      customer-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://customer-db:5432/customer_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
+  account-service:
+    build: ./account-service
+    container_name: transaction-account-service
+    restart: unless-stopped
+    depends_on:
+      account-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://account-db:5432/account_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
 
   pgadmin:
     image: dpage/pgadmin4:8.12
@@ -68,7 +105,6 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@transaction.example.com
       PGADMIN_DEFAULT_PASSWORD: admin123
-      PGADMIN_CONFIG_SERVER_MODE: "True"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
