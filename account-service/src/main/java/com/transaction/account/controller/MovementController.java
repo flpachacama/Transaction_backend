@@ -51,7 +51,7 @@ public class MovementController {
     @ApiResponse(responseCode = "200", description = "Movimiento encontrado")
     @ApiResponse(responseCode = "404", description = "Movimiento no encontrado")
     public ResponseEntity<MovementResponseDTO> getMovementById(
-            @Parameter(description = "Id de movimiento", required = true) @PathVariable Long id) {
+            @PathVariable @Parameter(description = "Id de movimiento", required = true) Long id){
         return ResponseEntity.ok(movementService.getMovementById(id));
     }
 
@@ -60,7 +60,7 @@ public class MovementController {
     @ApiResponse(responseCode = "204", description = "Movimiento eliminado")
     @ApiResponse(responseCode = "404", description = "Movimiento no encontrado")
     public ResponseEntity<Void> deleteMovement(
-            @Parameter(description = "Id de movimiento", required = true) @PathVariable Long id) {
+            @PathVariable @Parameter(description = "Id de movimiento", required = true) Long id) {
         movementService.deleteMovement(id);
         return ResponseEntity.noContent().build();
     }

@@ -35,17 +35,17 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable Long id) {
+    public ResponseEntity<CustomerResponseDTO> getCustomerById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(customerService.getCustomerById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerRequestDTO requestDTO) {
+    public ResponseEntity<CustomerResponseDTO> updateCustomer(@PathVariable("id") Long id, @Valid @RequestBody CustomerRequestDTO requestDTO) {
         return ResponseEntity.ok(customerService.updateCustomer(id, requestDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCustomer(@PathVariable("id") Long id) {
         customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
     }
