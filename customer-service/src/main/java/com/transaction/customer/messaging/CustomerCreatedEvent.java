@@ -1,4 +1,11 @@
 package com.transaction.customer.messaging;
 
-public record CustomerCreatedEvent(String clientId, String name, Boolean status) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record CustomerCreatedEvent(
+        @JsonProperty("client_id")
+        String clientId,
+        @JsonProperty("client_name")
+        String clientName,
+        Boolean status) {
 }

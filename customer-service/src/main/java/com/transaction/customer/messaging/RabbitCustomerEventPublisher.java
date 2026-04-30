@@ -20,6 +20,6 @@ public class RabbitCustomerEventPublisher implements CustomerEventPublisher {
     public void publishCustomerCreated(Customer customer) {
         CustomerCreatedEvent event = new CustomerCreatedEvent(customer.getClientId(), customer.getName(), customer.getStatus());
         rabbitTemplate.convertAndSend(customerExchange.getName(), CustomerConstants.CUSTOMER_CREATED_ROUTING_KEY, event);
-        log.info("Evento RabbitMQ publicado para cliente creado: clientId={}", customer.getClientId());
+        log.info("Customer event published: clientId={}, clientName={}", customer.getClientId(), customer.getName());
     }
 }
